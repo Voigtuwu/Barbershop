@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+import { Sequelize } from "sequelize";
 import { config } from "dotenv";
 
 config();
@@ -18,8 +18,12 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.user = require("./user.model.js")(sequelize, Sequelize);
-db.appointment = require("./appointment.model.js")(sequelize, Sequelize);
+// Importando os modelos usando a sintaxe de importação
+import userModel from "./user.model.js";
+import appointmentModel from "./appointment.model.js";
+
+db.user = userModel(sequelize, Sequelize);
+db.appointment = appointmentModel(sequelize, Sequelize);
 
 db.user.hasMany(db.appointment, { foreignKey: "userId" });
 db.appointment.belongsTo(db.user, { foreignKey: "userId" });

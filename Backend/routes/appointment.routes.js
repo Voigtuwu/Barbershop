@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { appointment as _appointment, user } from "../models";
-import { authenticateToken, authorize } from "../middleware/auth";
+import db from "../models/index.js";
+import {authenticateToken, authorize} from "../middleware/auth.js";
 const router = Router();
 
 router.post(
@@ -11,7 +11,7 @@ router.post(
     const { date, service } = req.body;
 
     try {
-      const appointment = await _appointment.create({
+      const appointment = await db.appointment.create({
         date,
         service,
         userId: req.user.id,
@@ -31,9 +31,9 @@ router.get(
     try {
       let appointments;
       if (req.user.role === "admin") {
-        appointments = await _appointment.findAll({ include: user });
+        appointments = await db.appointment.findAll({ include: db.user });
       } else {
-        appointments = await _appointment.findAll({
+        appointments = await db.appointment.findAll({
           where: { userId: req.user.id },
         });
       }
@@ -53,7 +53,7 @@ router.put(
     const { date, service } = req.body;
 
     try {
-      const appointment = await _appointment.findByPk(id);
+      const appointment = await db.appointment.findByPk(id);
       if (!appointment)
         return res.status(404).json({ message: "Agendamento não encontrado" });
 
@@ -76,7 +76,7 @@ router.delete(
     const { id } = req.params;
 
     try {
-      const appointment = await _appointment.findByPk(id);
+      const appointment = await db.appointment.findByPk(id);
       if (!appointment)
         return res.status(404).json({ message: "Agendamento não encontrado" });
 

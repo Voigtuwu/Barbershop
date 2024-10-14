@@ -1,6 +1,7 @@
-import { verify } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
+const { verify } = jsonwebtoken;
 
-const authenticateToken = (req, res, next) => {
+export const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1]; // Formato: "Bearer TOKEN"
 
@@ -18,7 +19,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-const authorize = (roles = []) => {
+export const authorize = (roles = []) => {
   if (typeof roles === "string") {
     roles = [roles];
   }
@@ -29,9 +30,4 @@ const authorize = (roles = []) => {
     }
     next();
   };
-};
-
-export default {
-  authenticateToken,
-  authorize,
 };
