@@ -1,6 +1,6 @@
 import { Router } from "express";
 import db from "../models/index.js";
-import {authenticateToken, authorize} from "../middleware/auth.js";
+import { authenticateToken, authorize } from "../middleware/auth.js";
 const router = Router();
 
 router.post(
@@ -10,6 +10,10 @@ router.post(
   async (req, res) => {
     const { date, service } = req.body;
 
+    if (!req.user.id) {
+      return res.status(400).json({ message: "ID do usuário não encontrado." });
+    }
+
     try {
       const appointment = await db.appointment.create({
         date,
@@ -18,6 +22,7 @@ router.post(
       });
       res.status(201).json(appointment);
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: err.message });
     }
   }

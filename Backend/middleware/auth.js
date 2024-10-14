@@ -15,6 +15,7 @@ export const authenticateToken = (req, res, next) => {
     }
 
     req.user = user;
+    console.log('Usuário autenticado:', req.user);
     next();
   });
 };

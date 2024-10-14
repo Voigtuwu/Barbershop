@@ -13,7 +13,7 @@ const generateToken = (user) => {
 };
 
 router.post("/register", async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
   const hashedPassword = hashSync(password, 8);
 
   try {
@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role,
+      role: "user",
     });
     res.status(201).json({
       id: user.id,
@@ -53,6 +53,19 @@ router.post("/login", async (req, res) => {
 
     const token = generateToken(user);
     res.json({ token });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+
+  
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const users = await db.user.findAll({
+      attributes: { exclude: ['password'] }
+    });
+    res.json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

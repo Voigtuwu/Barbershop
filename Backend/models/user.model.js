@@ -19,15 +19,12 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.ENUM("user", "admin", "barber"),
+      allowNull: false,
+      defaultValue: "user",
+    }
   });
-
-  User.associate = (models) => {
-    User.belongsToMany(models.Role, {
-      through: "user_roles",
-      foreignKey: "userId",
-      otherKey: "roleId",
-    });
-  };
 
   return User;
 };
